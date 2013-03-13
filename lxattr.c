@@ -23,7 +23,7 @@ static int my_setxattr(lua_State *L)
     const char *path = lua_tolstring(L, 1, &plen);
     const char *aname = lua_tolstring(L, 2, &nlen);
     const char *avalue = lua_tolstring(L, 3, &vlen);
-    if(plen == 0 || nlen == 0 || avalue == 0) {
+    if(plen == 0 || nlen == 0) {
         lua_pushnil(L);
         return 1;
     }
@@ -32,7 +32,7 @@ static int my_setxattr(lua_State *L)
         lua_pushinteger(L, errno);
         return 2;
     }
-    if(setxattr(path, aname, avalue, vlen, XATTR_CREATE) == 0) {
+    if(setxattr(path, aname, avalue, vlen, 0) == 0) {
         lua_pushboolean(L, 1);
         return 1;
     } else {
@@ -49,7 +49,7 @@ static int my_lsetxattr(lua_State *L)
     const char *path = lua_tolstring(L, 1, &plen);
     const char *aname = lua_tolstring(L, 2, &nlen);
     const char *avalue = lua_tolstring(L, 3, &vlen);
-    if(plen == 0 || nlen == 0 || avalue == 0) {
+    if(plen == 0 || nlen == 0) {
         lua_pushnil(L);
         return 1;
     }
@@ -58,7 +58,7 @@ static int my_lsetxattr(lua_State *L)
         lua_pushinteger(L, errno);
         return 2;
     }
-    if(setxattr(path, aname, avalue, vlen, XATTR_CREATE) == 0) {
+    if(setxattr(path, aname, avalue, vlen, 0) == 0) {
         lua_pushboolean(L, 1);
         return 1;
     } else {

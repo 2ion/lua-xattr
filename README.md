@@ -1,10 +1,12 @@
 #lua-xattr
 
+*PARTIAL IMPLEMENTATION*
+
 A library for getting and setting extended file attributes on Linux. It
 makes the setxattr/getxattr/listxattr function family from libattr
 available in Lua. 
 
-The project's home is at https://github.com/2ion/lxattr.
+The project's home is at https://github.com/2ion/lua-xattr
 
 #Building
 
@@ -19,7 +21,7 @@ The project's home is at https://github.com/2ion/lxattr.
     make
 
     # build for Lua 5.1
-    LUA=5.1 make
+    LUA=lua5.1 make
 
 #Documentation
 
@@ -32,9 +34,17 @@ The project's home is at https://github.com/2ion/lxattr.
     -- @return TRUE if successful; NIL if a parameter does not meet our
     -- expecations; NIL and an INTEGER if a C function returned an error.
     -- The integer is glibc's errno error code.
-    local s, errno = lx.set(path, name, value)
+    local bool, errno = lx.set(path, name, value)
 
     --- set an attribute on a file, NOT following symlinks
-    -- @see lx.set()
-    local s, errno = lx.lset(path, name, value)
+    local bool, errno = lx.lset(path, name, value)
 
+    --- list a file's attributes, following symlinks
+    -- @return attribute names (list of strings)
+    local table, errno = lx.list(path)
+
+    --- list a file's attributes, NOT following symlinks
+    -- @return like list()
+    local table, errno = lx.llist(path)
+
+    -- get()/lget() are not yet implemented!

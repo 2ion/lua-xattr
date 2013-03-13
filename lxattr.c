@@ -1,9 +1,12 @@
 /*
  * lxattr
- * Lua library for setting and getting xattributes on Linux
+ * Lua library for setting and getting xattributes on Linux.
+ *
  * Copyright 2013 Jens Oliver John <jens.o.john // gmail.com>
  * Licensed under the GNU General Public License v3 or later.
+ *
  * Project home: https://github.com/2ion/lxattr
+ * Documentation: See /README.md in the source tree
  * */
 
 #include <sys/types.h>
@@ -14,10 +17,6 @@
 #include <lua.h>
 #include <lauxlib.h>
 
-/*
- * @return a single value `true` if successful, NIL and glibc's errno
- * code if an error occured.
- */
 static int my_setxattr(lua_State *L)
 {
     size_t plen, nlen, vlen;

@@ -11,20 +11,17 @@ The project's home is at https://github.com/2ion/lua-xattr
 #Building
 
 ##Requirements
-* Lua development files (either 5.1 or 5.2)
+* Lua 5.2 development files 
 * libattr development files (we expect to have <attr/xattr.h> in our
   include path)
 * pkg-config to query --cflags and --libs
 
 ##Commands
-    # build for Lua 5.2
     make
-
-    # build for Lua 5.1
-    LUA=lua5.1 make
 
 #Documentation
 
+```lua
     local lx = require 'lxattr'
 
     --- set an attribute on a file, dereferencing symlinks
@@ -48,3 +45,4 @@ The project's home is at https://github.com/2ion/lua-xattr
     local table, errno = lx.llist(path)
 
     -- get()/lget() are not yet implemented!
+```

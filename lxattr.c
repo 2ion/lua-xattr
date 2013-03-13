@@ -162,12 +162,18 @@ static int my_llistxattr(lua_State *L)
     return 1; // table is on top of the stack
 }
 
+static int my_queryattr(lua_State *L)
+{
+    return 0;
+}
+
 
 static const struct luaL_Reg lxattr_list[] = {
     { "set", my_setxattr },
     { "lset", my_lsetxattr },
     { "list", my_listxattr },
     { "llist", my_llistxattr },
+    { "query", my_queryattr },
     { NULL, NULL }
 };
 

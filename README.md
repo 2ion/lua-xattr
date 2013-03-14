@@ -1,7 +1,5 @@
 #lua-xattr
 
-*PARTIAL IMPLEMENTATION*
-
 A library for getting and setting extended file attributes on Linux. It
 makes the setxattr/getxattr/listxattr function family from libattr
 available in Lua. 
@@ -44,5 +42,13 @@ The project's home is at https://github.com/2ion/lua-xattr
     -- @return like list()
     local table, errno = lx.llist(path)
 
-    -- get()/lget() are not yet implemented!
+    --- get an attribute $name from the file at $path
+    -- @param path (non-empty string) file path
+    -- @param name (non-empty string) name of the attribute
+    -- @return if successful a string which may contain binary data and
+    -- multiple \0s. May be an empty string. If getxattr() failed,
+    -- returns NIL and the failure's errno code. Returns NIL if the
+    -- arguments do not fit our expectations.
+    local binstring, errno = lx.get(path, name)
+    local binstring, errno = lx.lget(path, name)
 ```

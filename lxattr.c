@@ -162,18 +162,87 @@ static int my_llistxattr(lua_State *L)
     return 1; // table is on top of the stack
 }
 
-static int my_queryattr(lua_State *L)
+static int my_getxattr(lua_State *L)
 {
-    return 0;
+    size_t plen, nlen;
+    ssize_t val_len;
+    char *value = NULL;
+    const char *path = lua_tolstring(L, 1, &plen);
+    const char *name = lua_tolstring(L, 2, &nlen);
+    if(plen == 0 || nlen == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    if(access(path, F_OK | R_OK) != 0) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+        return 2;
+    }
+    val_len = getxattr(path, name, NULL, 0);
+    if(val_len == -1) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+        return 2;
+    } else if(val_len == 0) {
+        lua_pushstring(L, "");
+        return 1;
+    }
+    value = malloc(val_len);
+    val_len = getxattr(path, name, (void*) value, val_len);
+    if(val_len == -1) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+        return 2;
+    }
+    lua_pushlstring(L, (const char*) value, (size_t) val_len);
+    free(value);
+    return 1;
 }
 
+static int my_lgetxattr(lua_State*L)
+{
+    size_t plen, nlen;
+    ssize_t val_len;
+    char *value = NULL;
+    const char *path = lua_tolstring(L, 1, &plen);
+    const char *name = lua_tolstring(L, 2, &nlen);
+    if(plen == 0 || nlen == 0) {
+        lua_pushnil(L);
+        return 1;
+    }
+    if(faccessat(AT_FDCWD, path, F_OK | R_OK, AT_SYMLINK_NOFOLLOW) != 0) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+        return 2;
+    }
+    val_len = getxattr(path, name, NULL, 0);
+    if(val_len == -1) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+        return 2;
+    } else if(val_len == 0) {
+        lua_pushstring(L, "");
+        return 1;
+    }
+    value = malloc(val_len);
+    val_len = getxattr(path, name, (void*) value, val_len);
+    if(val_len == -1) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+        return 2;
+    }
+    lua_pushlstring(L, (const char*) value, (size_t) val_len);
+    free(value);
+    return 1;
+}
 
 static const struct luaL_Reg lxattr_list[] = {
     { "set", my_setxattr },
     { "lset", my_lsetxattr },
     { "list", my_listxattr },
     { "llist", my_llistxattr },
-    { "query", my_queryattr },
+    { "get", my_getxattr },
+    { "lget", my_lgetxattr },
     { NULL, NULL }
 };
 

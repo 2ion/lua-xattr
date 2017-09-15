@@ -17,6 +17,7 @@
 #include <errno.h>
 #include <lua.h>
 #include <lauxlib.h>
+#include <linux/limits.h>
 
 static int my_setxattr(lua_State *L)
 {
@@ -96,10 +97,7 @@ static int my_listxattr(lua_State *L)
         lua_newtable(L);
         return 1;
     }
-    // len > 0 := number of attributes
-    // FIXME: maximum length of attribute names?
-    // Let's assume sth for now ...
-    list = (char**) calloc(sizeof(char)*1024*70000, (size_t) listlen);
+    list = (char**) calloc(sizeof(char) * XATTR_SIZE_MAX, (size_t) listlen);
     if(list == NULL) {
         lua_pushnil(L);
         lua_pushinteger(L, errno);
@@ -145,7 +143,7 @@ static int my_llistxattr(lua_State *L)
     // len > 0 := number of attributes
     // FIXME: maximum length of attribute names?
     // Let's assume sth for now ...
-    list = (char**) calloc(sizeof(char)*1024*70000, (size_t) listlen);
+    list = (char**) calloc(sizeof(char) * XATTR_SIZE_MAX, (size_t) listlen);
     if(list == NULL) {
         lua_pushnil(L);
         lua_pushinteger(L, errno);

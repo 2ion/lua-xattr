@@ -185,7 +185,13 @@ static int my_getxattr(lua_State *L)
         lua_pushstring(L, "");
         return 1;
     }
+
     value = malloc(val_len);
+    if(!value) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+    }
+
     val_len = getxattr(path, name, (void*) value, val_len);
     if(val_len == -1) {
         lua_pushnil(L);
@@ -222,7 +228,13 @@ static int my_lgetxattr(lua_State*L)
         lua_pushstring(L, "");
         return 1;
     }
+
     value = malloc(val_len);
+    if(!value) {
+        lua_pushnil(L);
+        lua_pushinteger(L, errno);
+    }
+
     val_len = getxattr(path, name, (void*) value, val_len);
     if(val_len == -1) {
         lua_pushnil(L);
